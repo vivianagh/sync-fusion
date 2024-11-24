@@ -1,15 +1,16 @@
 package com.trainingsystem.SyncFusion.controller;
 
-import com.trainingsystem.SyncFusion.model.entity.Athlete;
-import com.trainingsystem.SyncFusion.model.io.AthleteIO;
+import com.trainingsystem.SyncFusion.model.dto.AthleteDto;
 import com.trainingsystem.SyncFusion.service.AthleteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/athletes")
@@ -23,26 +24,29 @@ public class AthleteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Athlete>> getAllAthletes() {
-        List<Athlete> athleteList = athleteService.getAllAthletes();
-
+    public ResponseEntity<Page<AthleteDto>> getAllAthletes(@PageableDefault(page = 0, size = 5)Pageable pageable) {
+        Page<AthleteDto> athleteList = athleteService.getAllAthletes(pageable);
         return new ResponseEntity<>(athleteList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Athlete> getAthleteById(@PathVariable Long id) {
-        Athlete athlete = athleteService.getAthleteById(id);
-        if (athlete != null) {
-            return new ResponseEntity<>(athlete, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<AthleteDto> getAthleteById(@PathVariable Long id) {
+        Optional<AthleteDto> athleteDto = athleteService.getAthleteById(id);
+        return athleteDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Athlete> createAthlete(@RequestBody Athlete athlete) {
+    public ResponseEntity<AthleteDto> createAthlete(@RequestBody AthleteDto athlete) {
         System.out.println("Received athlete: " + athlete);
-        Athlete createdAthlete = athleteService.createAthlete(athlete);
-        return new ResponseEntity<>(createdAthlete, HttpStatus.CREATED);
+        AthleteDto createdAthlete = athleteService.createAthlete(athlete);
+        return  ResponseEntity.ok(createdAthlete);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AthleteDto> updateAthlete(@PathVariable Long id, @RequestBody AthleteDto athleteDto) {
+        System.out.println("Received athlete: " + athleteDto);
+        athleteDto.setId(id);
+        AthleteDto updateAthlete = athleteService.updateAthlete(athleteDto);
+        return ResponseEntity.ok(updateAthlete);
     }
 }

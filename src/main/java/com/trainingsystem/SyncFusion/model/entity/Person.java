@@ -2,8 +2,10 @@ package com.trainingsystem.SyncFusion.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @Inheritance(strategy= InheritanceType.JOINED)
 public abstract class Person {
