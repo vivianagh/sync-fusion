@@ -21,15 +21,12 @@ public class ActivityComponent {
 
     private String details;
 
-    private String day;
-
     public ActivityComponent() {
 
     }
-    public ActivityComponent(String name, ActivityType activityType, String details, String day) {
+    public ActivityComponent(String name, ActivityType activityType, String details) {
         this.name = ActivityName.valueOf(name);
         this.activityType = activityType;
         this.details = details;
-        this.day = day;
     }
 }

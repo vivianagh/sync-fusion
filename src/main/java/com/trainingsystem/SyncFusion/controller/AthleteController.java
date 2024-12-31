@@ -2,7 +2,8 @@ package com.trainingsystem.SyncFusion.controller;
 
 import com.trainingsystem.SyncFusion.model.dto.AthleteDto;
 import com.trainingsystem.SyncFusion.service.AthleteService;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/api/athletes")
+@Tag(name="Athlete API" , description = "Manage athletes")
 public class AthleteController {
 
     private final AthleteService athleteService;
@@ -23,6 +25,7 @@ public class AthleteController {
         this.athleteService = athleteService;
     }
 
+    @Operation(summary = "Get all athletes", description = "Retrieve a list of all athletes")
     @GetMapping
     public ResponseEntity<Page<AthleteDto>> getAllAthletes(@PageableDefault(page = 0, size = 5)Pageable pageable) {
         Page<AthleteDto> athleteList = athleteService.getAllAthletes(pageable);
@@ -30,6 +33,7 @@ public class AthleteController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary ="Create a new athlete", description = "Add a new athlete to the system")
     public ResponseEntity<AthleteDto> getAthleteById(@PathVariable Long id) {
         Optional<AthleteDto> athleteDto = athleteService.getAthleteById(id);
         return athleteDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

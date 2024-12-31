@@ -3,6 +3,7 @@ package com.trainingsystem.SyncFusion.model.entity;
 import jakarta.persistence.*;
 import com.trainingsystem.SyncFusion.util.IntensityLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 public class ScheduledTraining {
 
@@ -21,11 +23,7 @@ public class ScheduledTraining {
     @JoinColumn(name="training_plan_id")
     private TrainingPlan trainingPlan;
 
-    private LocalDate date;
-
     private DayOfWeek dayOfWeek;
-
-    private IntensityLevel intensityLevel;
 
     @ManyToMany
     @JoinTable(
@@ -36,14 +34,11 @@ public class ScheduledTraining {
     private List<ActivityComponent> activities = new ArrayList<>();
 
     public ScheduledTraining() {
-
     }
 
-    public ScheduledTraining(TrainingPlan trainingPlan, LocalDate date, DayOfWeek dayOfWeek, IntensityLevel intensityLevel, List<ActivityComponent> activities) {
+    public ScheduledTraining(TrainingPlan trainingPlan, DayOfWeek dayOfWeek, List<ActivityComponent> activities) {
         this.trainingPlan = trainingPlan;
-        this.date = date;
         this.dayOfWeek = dayOfWeek;
-        this.intensityLevel = intensityLevel;
         this.activities = activities;
     }
 }
